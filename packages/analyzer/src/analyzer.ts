@@ -97,3 +97,5 @@ export function analyzeProject(globPath: string): IR {
     models: resolver.getRegistry(),
   };
 }
+
+export * from './types';

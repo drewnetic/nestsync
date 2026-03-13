@@ -1,4 +1,4 @@
-import { MethodDefinition } from '../../../analyzer/src/types';
+import { MethodDefinition } from '@nestsync/analyzer';
 import { TransportPlugin } from '../plugin';
 
 export const AxiosPlugin: TransportPlugin = {

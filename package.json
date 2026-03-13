@@ -1,0 +1,34 @@
+{
+  "name": "nestsync-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Type-Safe NestJS SDK Generator",
+  "packageManager": "pnpm@10.28.0",
+  "scripts": {
+    "dev": "ts-node packages/cli/src/index.ts",
+    "build": "pnpm -r run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write \"packages/**/*.ts\"",
+    "lint": "eslint \"packages/**/*.ts\"",
+    "lint:fix": "eslint \"packages/**/*.ts\" --fix"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@nestjs/common": "^11.1.16",
+    "@nestjs/core": "^11.1.16",
+    "@types/node": "^25.5.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
+    "eslint": "^10.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.0",
+    "vitest": "^4.1.0"
+  }
+}

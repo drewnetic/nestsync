@@ -19,7 +19,7 @@ const program = new Command();
 program
   .name('nest-sync')
   .description('Type-Safe TypeScript SDK Generator for NestJS')
-  .version('1.0.0')
+  .version('1.0.0', '-v, --version', 'Output the current version')
   .requiredOption('-i, --input <path>', 'Path to the NestJS source folder (e.g., ./src)')
   .requiredOption(
     '-o, --output <path>',

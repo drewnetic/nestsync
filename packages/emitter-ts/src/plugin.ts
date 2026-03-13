@@ -1,4 +1,4 @@
-import { MethodDefinition, ServiceDefinition } from '../../analyzer/src/types';
+import { MethodDefinition, ServiceDefinition } from '@nestsync/analyzer';
 
 export interface TransportPlugin {
   name: string;

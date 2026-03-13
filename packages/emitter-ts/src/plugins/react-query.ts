@@ -1,4 +1,4 @@
-import { ServiceDefinition } from '../../../analyzer/src/types';
+import { ServiceDefinition } from '@nestsync/analyzer';
 import { TransportPlugin } from '../plugin';
 import { FetchPlugin } from './fetch';
 

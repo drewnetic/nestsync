@@ -1,4 +1,4 @@
-import { IR, ModelDefinition, ServiceDefinition } from '../../analyzer/src/types';
+import { IR, ModelDefinition, ServiceDefinition } from '@nestsync/analyzer';
 import { TransportPlugin } from './plugin';
 import { AxiosPlugin } from './plugins/axios';
 
@@ -114,4 +114,3 @@ function generateClient(services: ServiceDefinition[], plugin: TransportPlugin):
 export { AxiosPlugin } from './plugins/axios';
 export { FetchPlugin } from './plugins/fetch';
 export { ReactQueryPlugin } from './plugins/react-query';
-

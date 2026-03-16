@@ -1,9 +1,12 @@
 {
-  "name": "nest-sync",
+  "name": "@nestsync/cli",
   "version": "1.0.0",
   "main": "dist/index.js",
   "bin": {
     "nest-sync": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsup src/index.ts --format cjs --clean"

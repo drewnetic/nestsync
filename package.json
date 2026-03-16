@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "description": "Type-Safe NestJS SDK Generator",
   "packageManager": "pnpm@10.28.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "ts-node packages/cli/src/index.ts",
     "build": "pnpm -r run build",

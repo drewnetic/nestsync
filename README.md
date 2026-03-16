@@ -121,6 +121,11 @@ function UserProfile() {
 
 ---
 
+> [!NOTE]
+> **Classes vs Interfaces:** NestSync is optimized for NestJS best practices. It currently extracts types exclusively from **Classes (DTOs and Entities)**. Using classes ensures that decorators, metadata, and complex inheritance (via `extends`) are parsed with 100% accuracy. Interfaces may not have their inheritance tree resolved correctly in the current version.
+
+---
+
 ## 🏗 Architecture
 
 NestSync operates as a modern 3-stage compiler pipeline:

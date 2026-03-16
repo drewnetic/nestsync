@@ -6,10 +6,10 @@ function normalizePath(pathStr: string): string {
   if (!pathStr || pathStr === '/') return '';
 
   const cleaned = pathStr
-    .replace(/\/+/g, '/') // Substitui múltiplas barras (////) por uma só (/)
-    .replace(/\/$/, ''); // Remove a barra final se existir
+    .replace(/\/+/g, '/') // Replaces multiple slashes (////) with a single one (/)
+    .replace(/\/$/, ''); // Removes trailing slash if it exists
 
-  // Garante que sempre comece com uma barra (caso o usuário tenha esquecido)
+  // Ensures it always starts with a leading slash
   return cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
 }
 

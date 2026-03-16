@@ -1,7 +1,7 @@
 {
   "name": "nestsync-monorepo",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Type-Safe NestJS SDK Generator",
   "packageManager": "pnpm@10.28.0",
   "publishConfig": {

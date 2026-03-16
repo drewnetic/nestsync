@@ -2,52 +2,70 @@ import { ClassDeclaration, Node, Type } from 'ts-morph';
 import { ModelDefinition, PropertyDefinition } from './types';
 
 export class TypeResolver {
-  // Our central registry
   private models: Record<string, ModelDefinition> = {};
 
-  // Get the complete registry when we are done analyzing
   public getRegistry() {
     return this.models;
   }
 
   public resolveType(tsType: Type): string {
-    // Unwrap Promises (e.g., Promise<UserDto> -> UserDto)
+    // 1. Unwrap Promises
     if (tsType.getSymbol()?.getName() === 'Promise') {
       const typeArgs = tsType.getTypeArguments();
       if (typeArgs.length > 0) {
-        return this.resolveType(typeArgs[0]); // Recursively resolve the inner type
+        return this.resolveType(typeArgs[0]);
       }
     }
 
-    // 1. Handle arrays (e.g., CreateUserDto[])
+    // 2. Handle arrays
     if (tsType.isArray()) {
       const elementType = tsType.getArrayElementTypeOrThrow();
       const resolvedName = this.resolveType(elementType);
       return `${resolvedName}[]`;
     }
 
-    if (tsType.isString() || tsType.isNumber() || tsType.isBoolean()) {
+    // 3. Handle Primitives and "Any/Unknown"
+    if (
+      tsType.isString() ||
+      tsType.isNumber() ||
+      tsType.isBoolean() ||
+      tsType.isAny() ||
+      tsType.isUnknown()
+    ) {
       return tsType.getText();
     }
 
-    // 3. Handle complex DTO classes
-    const symbol = tsType.getSymbol() || tsType.getAliasSymbol();
-    if (!symbol) return 'unknown';
+    // 4. Handle Date (usually converted to ISO string in JSON APIs)
+    if (tsType.getSymbol()?.getName() === 'Date') {
+      return 'string'; // Pode retornar 'Date' se o seu client http lidar com instâncias
+    }
+
+    // 5. Handle Utility Types like Record<string, any>
+    const aliasSymbol = tsType.getAliasSymbol();
+    if (aliasSymbol && aliasSymbol.getName() === 'Record') {
+      return tsType.getText(); // Vai retornar literalmente "Record<string, any>"
+    }
+
+    const symbol = tsType.getSymbol() || aliasSymbol;
+    if (!symbol) return 'any';
 
     const typeName = symbol.getName();
 
-    // Prevent infinite loops in self-referencing DTOs (e.g., a User containing a generic Node)
+    // 6. Block anonymous AST types from generating empty interfaces
+    if (typeName === '__type') {
+      return 'any';
+    }
+
+    // 7. Handle Complex DTO classes
     if (this.models[typeName]) {
       return typeName;
     }
 
-    // Mark as "currently parsing" to handle self-referencing trees
     this.models[typeName] = { name: typeName, properties: [] };
 
-    // Find the actual class declaration in the AST
-    const declaration = symbol.getDeclarations()[0];
+    const declaration = symbol.getDeclarations()?.[0];
 
-    if (Node.isClassDeclaration(declaration)) {
+    if (declaration && Node.isClassDeclaration(declaration)) {
       this.models[typeName].properties = this.extractClassProperties(declaration);
     }
 
@@ -55,28 +73,40 @@ export class TypeResolver {
   }
 
   private extractClassProperties(classDecl: ClassDeclaration): PropertyDefinition[] {
-    return classDecl.getProperties().map(prop => {
-      const propType = prop.getType();
+    const propertiesMap = new Map<string, PropertyDefinition>();
 
-      const isOptional = prop.hasQuestionToken() || prop.getDecorator('IsOptional') !== undefined;
+    let currentClass: ClassDeclaration | undefined = classDecl;
 
-      const resolvedTypeName = this.resolveType(propType);
+    while (currentClass) {
+      currentClass.getProperties().forEach(prop => {
+        const propName = prop.getName();
 
-      const jsDocs = prop.getJsDocs();
-      let description = undefined;
+        if (propertiesMap.has(propName)) return;
 
-      if (jsDocs.length > 0) {
-        // Get the inner text of the first JSDoc block
-        description = jsDocs[0].getInnerText().trim();
-      }
+        const propType = prop.getType();
+        const isOptional = prop.hasQuestionToken() || prop.getDecorator('IsOptional') !== undefined;
 
-      return {
-        name: prop.getName(),
-        type: resolvedTypeName.replace('[]', ''),
-        isArray: propType.isArray(),
-        isOptional,
-        description, // <-- Pass it to the IR
-      };
-    });
+        const resolvedTypeName = this.resolveType(propType);
+
+        const jsDocs = prop.getJsDocs();
+        let description = undefined;
+
+        if (jsDocs.length > 0) {
+          description = jsDocs[0].getInnerText().trim();
+        }
+
+        propertiesMap.set(propName, {
+          name: propName,
+          type: resolvedTypeName.replace('[]', ''),
+          isArray: propType.isArray(),
+          isOptional,
+          description,
+        });
+      });
+
+      currentClass = currentClass.getBaseClass();
+    }
+
+    return Array.from(propertiesMap.values());
   }
 }

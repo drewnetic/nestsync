@@ -2,6 +2,17 @@ import { Project } from 'ts-morph';
 import { TypeResolver } from './resolver';
 import { IR, MethodDefinition, PropertyDefinition, ServiceDefinition } from './types';
 
+function normalizePath(pathStr: string): string {
+  if (!pathStr || pathStr === '/') return '';
+
+  const cleaned = pathStr
+    .replace(/\/+/g, '/') // Substitui múltiplas barras (////) por uma só (/)
+    .replace(/\/$/, ''); // Remove a barra final se existir
+
+  // Garante que sempre comece com uma barra (caso o usuário tenha esquecido)
+  return cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
+}
+
 export function analyzeProject(globPath: string): IR {
   // Enforce return type here!
   const project = new Project();
@@ -20,7 +31,8 @@ export function analyzeProject(globPath: string): IR {
     const ctrlName = ctrl.getName() || 'UnnamedController';
 
     const basePathArg = ctrl.getDecorator('Controller')?.getArguments()[0];
-    const basePath = basePathArg ? basePathArg.getText().replace(/['"]/g, '') : '';
+    const rawBasePath = basePathArg ? basePathArg.getText().replace(/['"]/g, '') : '';
+    const basePath = normalizePath(rawBasePath);
 
     const methods: MethodDefinition[] = ctrl.getMethods().map(method => {
       // 1. Extract the HTTP Verb and Sub-path (e.g., @Post(':id'))
@@ -33,8 +45,10 @@ export function analyzeProject(globPath: string): IR {
 
       if (httpDecorator) {
         verb = httpDecorator.getName().toUpperCase() as MethodDefinition['verb'];
+
         const pathArg = httpDecorator.getArguments()[0];
-        subPath = pathArg ? pathArg.getText().replace(/['"]/g, '') : '';
+        const rawSubPath = pathArg ? pathArg.getText().replace(/['"]/g, '') : '';
+        subPath = normalizePath(rawSubPath);
       }
 
       // 2. Extract Parameters (@Param, @Query, @Body)
@@ -80,7 +94,7 @@ export function analyzeProject(globPath: string): IR {
       return {
         name: method.getName(),
         verb,
-        path: subPath ? `/${subPath}` : '', // Ensure leading slash
+        path: subPath, 
         params,
         query,
         bodyType,
@@ -89,7 +103,7 @@ export function analyzeProject(globPath: string): IR {
     });
 
     // Ensure leading slash for base path
-    services.push({ name: ctrlName, basePath: `/${basePath}`, methods });
+    services.push({ name: ctrlName, basePath: basePath, methods });
   }
 
   return {
@@ -99,3 +113,4 @@ export function analyzeProject(globPath: string): IR {
 }
 
 export * from './types';
+

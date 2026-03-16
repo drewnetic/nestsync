@@ -18,7 +18,7 @@ const program = new Command();
 
 program
   .name('nest-sync')
-  .description('Type-Safe TypeScript SDK Generator for NestJS')
+  .description('Type-Safe TypeScript SDK Generator for NestJS (DTOs must be classes)')
   .version('1.0.0', '-v, --version', 'Output the current version')
   .requiredOption('-i, --input <path>', 'Path to the NestJS source folder (e.g., ./src)')
   .requiredOption(
@@ -78,19 +78,22 @@ if (options.watch) {
 
   generateSdk();
 
-  const watchPath = path.join(process.cwd(), options.input, '**/*.ts').replace(/\\/g, '/');
+  // Transforma o input num caminho ABSOLUTO do seu sistema (C:\Users\...)
+  const watchTarget = path.resolve(process.cwd(), options.input);
 
-  const watcher = chokidar.watch(watchPath, {
+  const watcher = chokidar.watch(watchTarget, {
     ignored: /(^|[/\\])\../,
-    persistent: true,
+    persistent: true, // Isso obriga o Node a manter o terminal aberto
     ignoreInitial: true,
   });
 
   let timeout: NodeJS.Timeout;
 
   watcher.on('all', (event, filePath) => {
-    const normalizedFilePath = filePath.replace(/\\/g, '/');
-    const normalizedOutputPath = path.join(process.cwd(), options.output).replace(/\\/g, '/');
+    if (!filePath.endsWith('.ts')) return;
+
+    const normalizedFilePath = path.resolve(filePath).replace(/\\/g, '/');
+    const normalizedOutputPath = path.resolve(process.cwd(), options.output).replace(/\\/g, '/');
 
     if (normalizedFilePath === normalizedOutputPath) return;
 

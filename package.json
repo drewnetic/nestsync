@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@nestjs/common": "^11.1.16",
+    "@nestjs/common": "^11.1.17",
     "@nestjs/core": "^11.1.16",
     "@types/node": "^25.5.0",
     "class-transformer": "^0.5.1",

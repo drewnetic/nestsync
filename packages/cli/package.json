@@ -1,6 +1,6 @@
 {
   "name": "@nestsync/cli",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/index.js",
   "bin": {
     "nest-sync": "./dist/index.js"

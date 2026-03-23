@@ -64,7 +64,7 @@ npx nestsync --input ./apps/backend/src --output ./apps/frontend/src/api/sdk.gen
 Keep the generated SDK perfectly synced with your backend in real-time:
 
 ```Bash
-npx nest-sync -i ./src -o ../client/sdk.gen.ts --client=react-query --watch
+npx nestsync -i ./src -o ../client/sdk.gen.ts --client=react-query --watch
 ```
 
 ---

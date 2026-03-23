@@ -1,6 +1,6 @@
 {
   "name": "@nestsync/analyzer",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "dist/analyzer.js",
   "types": "dist/analyzer.d.ts",
   "publishConfig": {

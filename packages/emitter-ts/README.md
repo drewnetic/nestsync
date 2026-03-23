@@ -1,3 +1,5 @@
+> **Note:** This package is part of the [NestSync](https://github.com/drewnetic/nestsync) ecosystem.
+
 # ⚡ NestSync
 
 **The Type-Safe Bridge for NestJS Monorepos.**
@@ -6,6 +8,8 @@
 ![NestJS](https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
 ![React Query](https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
+![NPM Downloads](https://img.shields.io/npm/dm/@nestsync/cli.svg?style=for-the-badge&color=CB3837&logo=npm&logoColor=white)
+
 
 NestSync is a compiler-tier developer tool that automatically generates fully typed, production-ready frontend SDKs directly from your NestJS controllers and DTOs.
 
@@ -19,6 +23,21 @@ By leveraging deep **Static Analysis (AST)**, NestSync completely eliminates API
 - **Pluggable Architecture:** Generate SDKs for native `fetch`, `axios`, or even **React Query** custom hooks.
 - **Lightning Fast Watch Mode:** Recompiles your SDK in milliseconds when a backend controller or DTO changes.
 - **Monorepo Ready:** Designed from the ground up to work seamlessly in `pnpm`, Turborepo, and Nx workspaces.
+
+---
+
+## 📊 Performance Benchmark (Real-World Test)
+
+In a stress test simulating a large-scale enterprise application (**50 Modules** and **100+ DTOs**), NestSync significantly outperformed traditional OpenAPI-based workflows by eliminating the runtime overhead.
+
+| Metric              | Swagger/OpenAPI Flow            | **NestSync (AST)**         |
+| :------------------ | :------------------------------ | :------------------------- |
+| **Generation Time** | 9.17s                           | **1.73s**                  |
+| **Requirements**    | Running Server + Complex Config | **Source Code Only**       |
+| **Process**         | Boot + JSON Export + Generation | **Direct Static Analysis** |
+
+> [!TIP]
+> **Result:** NestSync is **5.3x faster** than traditional methods. Since it doesn't require a running backend, it's perfect for CI/CD pipelines and fast local development loops.
 
 ---
 

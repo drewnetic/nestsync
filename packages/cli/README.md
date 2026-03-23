@@ -10,7 +10,6 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
 ![NPM Downloads](https://img.shields.io/npm/dm/@nestsync/cli.svg?style=for-the-badge&color=CB3837&logo=npm&logoColor=white)
 
-
 NestSync is a compiler-tier developer tool that automatically generates fully typed, production-ready frontend SDKs directly from your NestJS controllers and DTOs.
 
 By leveraging deep **Static Analysis (AST)**, NestSync completely eliminates API contract drift without requiring you to run your NestJS server or rely on clunky OpenAPI/Swagger YAML files.
@@ -36,7 +35,6 @@ In a stress test simulating a large-scale enterprise application (**50 Modules**
 | **Requirements**    | Running Server + Complex Config | **Source Code Only**       |
 | **Process**         | Boot + JSON Export + Generation | **Direct Static Analysis** |
 
-> [!TIP]
 > **Result:** NestSync is **5.3x faster** than traditional methods. Since it doesn't require a running backend, it's perfect for CI/CD pipelines and fast local development loops.
 
 ---
@@ -48,9 +46,9 @@ In a stress test simulating a large-scale enterprise application (**50 Modules**
 Install NestSync globally or as a dev dependency in your workspace:
 
 ```bash
-npm install -g nest-sync
+npm install -g @nestsync/cli
 # or
-pnpm add -D nest-sync
+pnpm add -D @nestsync/cli
 ```
 
 ### 2. Generate your SDK
@@ -58,7 +56,7 @@ pnpm add -D nest-sync
 Run the CLI, pointing to your NestJS source folder and specifying the output path for your frontend:
 
 ```Bash
-npx nest-sync --input ./apps/backend/src --output ./apps/frontend/src/api/sdk.gen.ts --client=fetch
+npx nestsync --input ./apps/backend/src --output ./apps/frontend/src/api/sdk.gen.ts --client=fetch
 ```
 
 ### 3. Watch Mode (Development)
@@ -111,7 +109,7 @@ import { setNestSyncConfig } from './api/sdk.gen';
 
 // Setup once in your App.tsx or main.ts
 setNestSyncConfig({
-  baseUrl: '[https://api.drewtech.com.br/v1](https://api.drewtech.com.br/v1)',
+  baseUrl: 'https://api.drewtech.com.br/v1',
   getToken: async () => localStorage.getItem('access_token'),
 });
 ```

@@ -46,9 +46,9 @@ In a stress test simulating a large-scale enterprise application (**50 Modules**
 Install NestSync globally or as a dev dependency in your workspace:
 
 ```bash
-npm install -g nest-sync
+npm install -g @nestsync/cli
 # or
-pnpm add -D nest-sync
+pnpm add -D @nestsync/cli
 ```
 
 ### 2. Generate your SDK
@@ -56,7 +56,7 @@ pnpm add -D nest-sync
 Run the CLI, pointing to your NestJS source folder and specifying the output path for your frontend:
 
 ```Bash
-npx nest-sync --input ./apps/backend/src --output ./apps/frontend/src/api/sdk.gen.ts --client=fetch
+npx nestsync --input ./apps/backend/src --output ./apps/frontend/src/api/sdk.gen.ts --client=fetch
 ```
 
 ### 3. Watch Mode (Development)
